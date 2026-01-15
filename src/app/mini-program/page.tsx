@@ -241,6 +241,16 @@ export default function MiniProgramPage() {
   useEffect(() => { if (mounted && status === 'unauthenticated') router.push('/login') }, [mounted, status, router])
   useEffect(() => { if (mounted && session) fetchAllData() }, [mounted, session, fetchAllData])
   
+  // 根据用户角色设置默认tab：代理进入"我的"，管理员进入"首页"
+  useEffect(() => {
+    if (mounted && session) {
+      const isAdmin = session.user.role === 'admin'
+      if (!isAdmin && session.user.agentId) {
+        setActiveTab('profile') // 代理默认进入"我的"
+      }
+    }
+  }, [mounted, session])
+  
   // 主题初始化和持久化
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme')
