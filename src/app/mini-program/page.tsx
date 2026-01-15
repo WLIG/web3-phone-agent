@@ -328,7 +328,10 @@ export default function MiniProgramPage() {
   
   if (!session) return null
 
+  // 管理员或代理都可以看到完整功能
   const isAgent = session.user.agentId && session.user.agentLevel
+  const isAdmin = session.user.role === 'admin'
+  const hasFullAccess = isAgent || isAdmin
   const now = new Date()
   const todayCommission = commissions.filter(c => new Date(c.createdAt).toDateString() === now.toDateString()).reduce((s, c) => s + c.amount, 0)
   const weekCommission = commissions.filter(c => new Date(c.createdAt) >= new Date(now.getTime() - 7*24*60*60*1000)).reduce((s, c) => s + c.amount, 0)
@@ -617,11 +620,11 @@ export default function MiniProgramPage() {
             <Button size="icon" variant="ghost" className="text-white hover:bg-white/20" onClick={() => signOut()}><LogOut className="w-5 h-5" /></Button>
           </div>
         </div>
-        {isAgent && stats && (
+        {hasFullAccess && stats && (
           <div className="bg-white/10 backdrop-blur rounded-xl p-4">
             <div className="flex justify-between items-start mb-3">
               <div><p className="text-cyan-200 text-sm">可提现余额</p><p className="text-3xl font-bold">¥{(stats.balance || 0).toLocaleString()}</p></div>
-              <Badge className="bg-gradient-to-r from-amber-400 to-orange-500 text-white border-0">{stats.level === 1 ? '⭐ 一级代理' : '二级代理'}</Badge>
+              <Badge className="bg-gradient-to-r from-amber-400 to-orange-500 text-white border-0">{isAdmin ? '👑 管理员' : stats.level === 1 ? '⭐ 一级代理' : '二级代理'}</Badge>
             </div>
             <div className="grid grid-cols-3 gap-2 text-center">
               <div className="bg-white/10 rounded-lg p-2"><p className="text-lg font-bold text-cyan-300">¥{todayCommission.toFixed(0)}</p><p className="text-xs text-slate-300">今日佣金</p></div>
@@ -633,7 +636,7 @@ export default function MiniProgramPage() {
       </header>
 
       <main className="px-4 py-4 pb-24">
-        {!isAgent ? (
+        {!hasFullAccess ? (
           <Card className={theme.card}>
             <CardContent className="p-6 text-center">
               <UserPlus className="w-16 h-16 mx-auto mb-4 text-cyan-400" />
@@ -913,7 +916,7 @@ export default function MiniProgramPage() {
       </main>
 
       {/* 底部导航 */}
-      {isAgent && (
+      {hasFullAccess && (
         <nav className={`fixed bottom-0 left-0 right-0 ${theme.nav} border-t px-4 py-2`}>
           <div className="flex justify-around">
             {[
