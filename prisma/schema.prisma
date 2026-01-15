@@ -1,0 +1,156 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// 用户表
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  phone         String?   @unique
+  password      String
+  name          String?
+  avatar        String?
+  role          String    @default("user") // user, agent, admin
+  status        String    @default("active") // active, inactive, banned
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  agent           Agent?
+  orders          Order[]
+  withdrawals     Withdrawal[]
+  paymentAccounts PaymentAccount[]
+}
+
+// 代理表
+model Agent {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id])
+  level           Int       @default(2) // 1=一级代理, 2=二级代理
+  parentId        String?   // 上级代理ID
+  parent          Agent?    @relation("AgentHierarchy", fields: [parentId], references: [id])
+  children        Agent[]   @relation("AgentHierarchy")
+  commissionRate  Float     @default(0.08) // 佣金比例 8%-25%
+  referralRate    Float     @default(0.20) // 推荐奖励比例
+  totalSales      Float     @default(0)
+  totalCommission Float     @default(0)
+  balance         Float     @default(0) // 可提现余额
+  status          String    @default("pending") // pending, approved, rejected
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  orders          Order[]
+  commissions     Commission[]
+}
+
+// 产品表
+model Product {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  price       Float
+  stock       Int       @default(0)
+  image       String?
+  status      String    @default("active") // active, inactive
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  orderItems  OrderItem[]
+}
+
+// 订单表
+model Order {
+  id            String      @id @default(cuid())
+  orderNo       String      @unique
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  agentId       String?
+  agent         Agent?      @relation(fields: [agentId], references: [id])
+  totalAmount   Float
+  status        String      @default("pending") // pending, paid, shipped, completed, cancelled
+  paymentMethod String?
+  shippingAddr  String?
+  remark        String?
+  paidAt        DateTime?
+  shippedAt     DateTime?
+  completedAt   DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  items         OrderItem[]
+  commissions   Commission[]
+}
+
+// 订单项
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Float
+  createdAt DateTime @default(now())
+}
+
+// 佣金记录
+model Commission {
+  id        String   @id @default(cuid())
+  agentId   String
+  agent     Agent    @relation(fields: [agentId], references: [id])
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id])
+  amount    Float
+  rate      Float    // 佣金比例
+  type      String   // direct=直接销售, referral=推荐奖励
+  status    String   @default("pending") // pending, settled, cancelled
+  settledAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 提现记录
+model Withdrawal {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  amount        Float
+  fee           Float     @default(0)
+  actualAmount  Float     // 实际到账金额
+  method        String    // bank, crypto, mobile_money
+  account       String    // 收款账号
+  status        String    @default("pending") // pending, processing, completed, rejected
+  remark        String?
+  processedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// 收款账户
+model PaymentAccount {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  type      String   // bank, mobile_money, crypto
+  name      String   // 账户名称/持卡人
+  account   String   // 账号
+  bankName  String?  // 银行名称
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 系统配置
+model SystemConfig {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  desc      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

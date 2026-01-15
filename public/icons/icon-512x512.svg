@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0891b2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="100" fill="url(#grad)"/>
+  <rect x="156" y="96" width="200" height="320" rx="24" fill="#1e293b"/>
+  <rect x="176" y="136" width="160" height="240" rx="8" fill="#0f172a"/>
+  <circle cx="256" cy="400" r="16" fill="#475569"/>
+  <text x="256" y="280" font-family="Arial" font-size="72" font-weight="bold" fill="#0891b2" text-anchor="middle">W3</text>
+</svg>
