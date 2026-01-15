@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/db'
+import { db } from '@/lib/db'
 import bcrypt from 'bcryptjs'
 
 export async function GET() {
   try {
     // 检查是否已有数据
-    const existingAdmin = await prisma.user.findUnique({
+    const existingAdmin = await db.user.findUnique({
       where: { email: 'admin@web3phone.com' }
     })
     
@@ -17,7 +17,7 @@ export async function GET() {
     const agentPwd = await bcrypt.hash('123456', 10)
 
     // 创建管理员
-    await prisma.user.create({
+    await db.user.create({
       data: {
         email: 'admin@web3phone.com',
         password: adminPwd,
@@ -28,7 +28,7 @@ export async function GET() {
     })
 
     // 创建一级代理
-    const agent1User = await prisma.user.create({
+    const agent1User = await db.user.create({
       data: {
         email: 'agent1@web3phone.com',
         password: agentPwd,
@@ -38,7 +38,7 @@ export async function GET() {
       }
     })
 
-    await prisma.agent.create({
+    await db.agent.create({
       data: {
         userId: agent1User.id,
         level: 1,
@@ -52,7 +52,7 @@ export async function GET() {
     })
 
     // 创建产品
-    await prisma.product.createMany({
+    await db.product.createMany({
       data: [
         { id: 'prod_basic', name: 'Web3 Phone Basic', description: '入门级Web3智能手机', price: 2999, stock: 1000, status: 'active' },
         { id: 'prod_pro', name: 'Web3 Phone Pro', description: '专业级Web3智能手机', price: 4999, stock: 500, status: 'active' },
@@ -61,7 +61,7 @@ export async function GET() {
     })
 
     // 创建系统配置
-    await prisma.systemConfig.createMany({
+    await db.systemConfig.createMany({
       data: [
         { key: 'tier1_min_rate', value: '0.15', desc: '一级代理最低佣金比例' },
         { key: 'tier1_max_rate', value: '0.25', desc: '一级代理最高佣金比例' },
