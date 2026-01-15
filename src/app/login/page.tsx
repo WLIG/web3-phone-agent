@@ -35,12 +35,12 @@ export default function LoginPage() {
       const res = await fetch('/api/profile')
       if (res.ok) {
         const data = await res.json()
-        // 管理员跳转到小程序全功能界面
-        if (data.user?.role === 'admin') {
-          router.push('/mini-program')
+        // 管理员跳转到管理后台
+        if (data.role === 'admin') {
+          router.push('/admin')
         } else {
-          // 代理用户跳转到个人中心
-          router.push('/profile')
+          // 代理用户跳转到小程序
+          router.push('/mini-program')
         }
       } else {
         router.push('/mini-program')
