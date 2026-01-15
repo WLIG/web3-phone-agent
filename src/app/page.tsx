@@ -1,11 +1,11 @@
-检查'use client'
+'use client'
 
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Smartphone, CheckCircle2, Copy, RefreshCw, ArrowRight, Download, Zap, TrendingUp, Shield, Wallet, Globe2, Target } from 'luc MessageCi
+import { Smartphone, CheckCircle2, Copy, RefreshCw, ArrowRight, Download, Zap, TrendingUp, Shield, Wallet, Globe2, Target } from 'lucide-react'
 
 export default function Home() {
   const [lang, setLang] = useState('zh')
