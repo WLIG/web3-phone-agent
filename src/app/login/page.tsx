@@ -31,7 +31,20 @@ export default function LoginPage() {
     if (result?.error) {
       setError(result.error)
     } else {
-      router.push('/profile')
+      // 获取用户信息来决定跳转目标
+      const res = await fetch('/api/profile')
+      if (res.ok) {
+        const data = await res.json()
+        // 管理员跳转到小程序全功能界面
+        if (data.user?.role === 'admin') {
+          router.push('/mini-program')
+        } else {
+          // 代理用户跳转到个人中心
+          router.push('/profile')
+        }
+      } else {
+        router.push('/mini-program')
+      }
       router.refresh()
     }
   }

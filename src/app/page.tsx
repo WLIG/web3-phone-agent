@@ -1,11 +1,11 @@
-'use client'
+检查'use client'
 
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Smartphone, Clock, DollarSign, CheckCircle2, Copy, RefreshCw, ArrowRight, Download, Zap, TrendingUp, Shield, Wallet, Globe2, MessageCircle, Users, Target, Award, Building2, GraduationCap, Church } from 'lucide-react'
+import { Smartphone, CheckCircle2, Copy, RefreshCw, ArrowRight, Download, Zap, TrendingUp, Shield, Wallet, Globe2, Target } from 'luc MessageCi
 
 export default function Home() {
   const [lang, setLang] = useState('zh')
@@ -74,7 +74,7 @@ export default function Home() {
           </TabsList>
 
           <TabsContent value="overview">
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto">
               <Card className="border-4 border-purple-500 shadow-xl hover:scale-105 transition-all">
                 <CardHeader className="bg-purple-600 text-white">
                   <Smartphone className="w-12 h-12" />
@@ -103,22 +103,6 @@ export default function Home() {
                   </div>
                   <Button className="w-full bg-blue-600 hover:bg-blue-700" onClick={() => window.location.href = '/admin'}>
                     {t('进入后台', 'Go to')} <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className="border-4 border-green-500 shadow-xl hover:scale-105 transition-all">
-                <CardHeader className="bg-green-600 text-white">
-                  <Globe2 className="w-12 h-12" />
-                  <CardTitle className="text-2xl">{t('API文档', 'API Docs')}</CardTitle>
-                </CardHeader>
-                <CardContent className="p-6">
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center gap-2"><CheckCircle2 className="w-5 h-5 text-green-600" /><span>RESTful API</span></div>
-                    <div className="flex items-center gap-2"><CheckCircle2 className="w-5 h-5 text-green-600" /><span>JWT Auth</span></div>
-                  </div>
-                  <Button className="w-full bg-green-600 hover:bg-green-700" onClick={() => window.location.href = '/api-docs'}>
-                    {t('查看文档', 'View')} <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </CardContent>
               </Card>
@@ -227,7 +211,7 @@ export default function Home() {
               <Badge className="bg-green-600 text-white px-4 py-2">{t('100%稳定', '100% Stable')}</Badge>
               <Badge className="bg-blue-600 text-white px-4 py-2">{t('标准UI', 'Standard UI')}</Badge>
               <p className="text-sm text-slate-500">
-                {t('2024', '2024')}
+                © 2026 M-pata团队
               </p>
             </div>
           </div>
